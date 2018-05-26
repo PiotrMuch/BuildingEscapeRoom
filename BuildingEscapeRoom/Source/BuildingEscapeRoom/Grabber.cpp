@@ -119,6 +119,15 @@ const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 	return Hit;
 }
 
+FVector UGrabber::GetReachLineStart()
+{
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation,
+		OUT PlayerViewPointRotation
+	);
+	return PlayerViewPointLocation;
+}
+
 FVector UGrabber::GetReachLineEnd()
 {
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
