@@ -12,5 +12,6 @@ BuildingEscapeRoom/Content/StarterContent/
 # Visual Studio Generated Files #
 #################################
 *.VC.db
-*.opendb
-BuildingEscapeRoom/.vs/BuildingEscapeRoom/v15/.suo
+*.VC.opendb
+*.suo
+*.sln
