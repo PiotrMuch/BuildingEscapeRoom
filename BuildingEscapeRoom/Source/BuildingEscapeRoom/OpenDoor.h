@@ -42,4 +42,7 @@ private:
 	float DoorCloseDelay = 1.0f;
 
 	float LastDoorOpenTime;
+
+	//Returns total mass in kg
+	float GetTotalMassOfActorsOnPlate();
 };
