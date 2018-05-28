@@ -50,17 +50,16 @@ void UGrabber::SetupInputComponent()
 }
 
 void UGrabber::Grab(){
-	UE_LOG(LogTemp, Warning, TEXT("Grab pressed"));
 	auto HitResult = GetFirstPhysicsBodyInReach();
-	auto ComponentToGrab = HitResult.GetComponent();
+	auto ComponentToGrab = HitResult.GetComponent(); // gets the mesh in our case
 	auto ActorHit = HitResult.GetActor();
 	if (ActorHit) 
 	{
 		PhysicsHandle->GrabComponent(
 			ComponentToGrab,
-			NAME_None,
+			NAME_None, //no mesh needed
 			ComponentToGrab->GetOwner()->GetActorLocation(),
-			true
+			true //allow rotation
 		);
 	}
 }
@@ -84,9 +83,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 {
-
-	FVector LineTracerEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
-
 	//DrawDebugLine(
 	//	GetWorld(),
 	//	PlayerViewPointLocation,
@@ -99,24 +95,15 @@ const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 	//);
 
 	FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetOwner());
-	FHitResult Hit;
+	FHitResult HitResult;
 	GetWorld()->LineTraceSingleByObjectType(
-		OUT Hit,
-		PlayerViewPointLocation,
-		LineTracerEnd,
-		FCollisionObjectQueryParams(
-			ECollisionChannel::ECC_PhysicsBody
-		),
+		OUT HitResult,
+		GetReachLineStart(),
+		GetReachLineEnd(),
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
 		TraceParameters
 	);
-
-	AActor* ActorHit = Hit.GetActor();
-	if (ActorHit)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Line trace hit: %s"), *(ActorHit->GetName()));
-	}
-
-	return Hit;
+	return HitResult;
 }
 
 FVector UGrabber::GetReachLineStart()
