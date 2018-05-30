@@ -3,6 +3,7 @@
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
 #include "Grabber.h"
+#include "Engine/World.h"
 
 #define OUT
 
@@ -23,7 +24,11 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	Owner = GetOwner();
-	// ...
+
+	if (!PressurePlate) 
+	{ 
+		UE_LOG(LogTemp, Error, TEXT("%s missing pressure plate"), *GetOwner()->GetName());
+	}
 	
 }
 
@@ -31,7 +36,6 @@ void UOpenDoor::OpenDoor()
 {
 	Owner->SetActorRotation(FRotator(0.0f, OpenAngle, 0.0f));
 }
-
 
 void UOpenDoor::CloseDoor()
 {
@@ -61,6 +65,7 @@ float UOpenDoor::GetTotalMassOfActorsOnPlate()
 {
 	float totalMass = 0.f;
 	TArray<AActor*> OverlappingActors;
+	if (!PressurePlate) { return totalMass; }
 	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
 
 	for (auto& Actor : OverlappingActors)
